@@ -11,11 +11,6 @@ from arbitrarystyle import draw_image_stylized
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
-def send_homepage():
-    return render_template('index.html')
-
-
 # given to filenames, draw the 'content' image in the style of the 'style' image
 # For testing purposes; use with HTTP client (ex. Postman)
 @app.route('/styletransfer', methods=['POST'])
@@ -31,6 +26,12 @@ def testJSONResponse():
     return json.dumps({'foo': 'bar'})
 
 
+def convert_binary_to_image(filename, binary):
+    fd = open(filename, 'wb')
+    fd.write(binary)
+    fd.close()
+
+
 # Upload and generate images here
 @app.route('/baseImages', methods=['POST'])
 def upload_and_generate():
@@ -42,16 +43,12 @@ def upload_and_generate():
         style_image = request.form['styleImage']
         binary_content = a2b_base64(content_image)
         binary_style = a2b_base64(style_image)
-        # TODO: break this up into a separate function
-        fd = open('content.png', 'wb')
-        fd.write(binary_content)
-        fd.close()
-        fd = open('style.png', 'wb')
-        fd.write(binary_style)
-        fd.close()
+        
+        convert_binary_to_image('content.png', binary_content)
+        convert_binary_to_image('style.png', binary_style)
 
         draw_image_stylized('content.png', 'style.png', savename='images/' + request.form['savename'])
-        # # remove the files after
+        # remove the files after
         os.remove('content.png')
         os.remove('style.png')
 
@@ -59,5 +56,5 @@ def upload_and_generate():
             encoded_image = base64.b64encode(image_file.read())
         
         return encoded_image
-        # TODO: convert new image to base64 and send back to client
-        # return send_file('images/' + request.form['savename'], mimetype='image/png')
+        
+        

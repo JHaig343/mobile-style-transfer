@@ -38,7 +38,7 @@ def load_img(path_to_img):
 def draw_image_stylized(content_img, style_img, savename):
     content_image = load_img(content_img)
     style_image = load_img(style_img)
-    # The TF Hub model we want to use - arbitrary nueral style transfer
+    # The TF Hub model we want to use - arbitrary neural style transfer
     hub_handle = 'https://tfhub.dev/google/magenta/arbitrary-image-stylization-v1-256/2'
     hub_module = hub.load(hub_handle)
     outputs = hub_module(tf.constant(content_image), tf.constant(style_image))

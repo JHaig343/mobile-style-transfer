@@ -1,0 +1,6 @@
+tensorflow==2.0.1
+tensorflow_hub==0.8.0
+numpy
+Flask
+Pillow
+matplotlib

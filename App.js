@@ -55,22 +55,20 @@ export default class App extends React.Component {
     let styleImage = this.state.image2;
     
     const formData = new FormData();
-    //TODO: will probably need to convert these to a file format...
+
     formData.append('contentImage', contentImage);
     formData.append('styleImage', styleImage);
     formData.append('savename', 'testIOS.png');
     
     console.log(formData);
-    // FIXME: request succeeds but server not set up to take format of image data. Pass in URI?
+    // FIXME: change url so it is not hardcoded
     fetch('http://10.0.0.218:5000/baseImages', {
       method: 'POST',
       body: formData
-    }).then(response => response.text())
+    }).then(response => response.text()) //response will be a base64 string so keep as text
         .then(result => {
-          console.log("Oh looky success!");
-          // console.log("Result: " + result);
           this.setState({image3: result });
-          console.log("Complete!")
+          console.log("Style Transfer Complete!");
         })
         .catch(error => { console.log('Error: ', error )
         });
@@ -95,7 +93,6 @@ export default class App extends React.Component {
           this.setState({ image2: result.base64});
         }
       }
-      console.log(result);
       
     } catch(E) {
       console.error("Error: " + E);
@@ -117,6 +114,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
     marginTop: 50,
+    marginBottom: 50,
   },
   buttonText: {
     fontSize: 20,
